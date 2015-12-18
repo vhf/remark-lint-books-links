@@ -64,4 +64,6 @@ function itemLink(ast, file, preferred, done) {
   done();
 }
 
-module.exports = itemLink;
+module.exports = {
+  'books-links': itemLink
+};
