@@ -1,6 +1,6 @@
 {
   "name": "mdast-lint-books-links",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Checks that all resources links are formatted according to vhf/free-programming-books guidelines",
   "author": "Victor Felder <victorfelder@gmail.com>",
   "repository": {
@@ -27,5 +27,5 @@
     "url": "https://github.com/vhf/mdast-lint-books-links/issues"
   },
   "homepage": "https://github.com/vhf/mdast-lint-books-links#readme",
-  "main": "dist/index.js"
+  "main": "dist/item-link.js"
 }
