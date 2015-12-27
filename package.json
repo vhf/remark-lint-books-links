@@ -1,11 +1,11 @@
 {
-  "name": "mdast-lint-books-links",
-  "version": "0.1.1",
+  "name": "remark-lint-books-links",
+  "version": "1.0.0",
   "description": "Checks that all resources links are formatted according to vhf/free-programming-books guidelines",
   "author": "Victor Felder <victorfelder@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vhf/mdast-lint-books-links.git"
+    "url": "git+https://github.com/vhf/remark-lint-books-links.git"
   },
   "license": "MIT",
   "dependencies": {
@@ -24,8 +24,8 @@
     "build": "babel lib -d dist"
   },
   "bugs": {
-    "url": "https://github.com/vhf/mdast-lint-books-links/issues"
+    "url": "https://github.com/vhf/remark-lint-books-links/issues"
   },
-  "homepage": "https://github.com/vhf/mdast-lint-books-links#readme",
+  "homepage": "https://github.com/vhf/remark-lint-books-links#readme",
   "main": "dist/item-link.js"
 }
