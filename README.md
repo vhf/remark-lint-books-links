@@ -4,65 +4,88 @@ This [remark-lint](https://github.com/wooorm/remark-lint) rule was created for [
 
 This rule only applies to list items starting with a link. It enforces the following things:
 
-- If an author is mentioned, it's done with ` - ` (a dash surrounded by single spaces)
+###### Author
 
-```
-BAD : * [Another Awesome Book - John Doe](http://example.com/book.html)
-BAD : * [Another Awesome Book](http://example.com/book.html)- John Doe
-GOOD: * [Another Awesome Book](http://example.com/book.html) - John Doe
-```
+If an author is mentioned, it's done with ` - ` (a dash surrounded by single spaces)
 
-- There's a single space between the link and its format
-
-```
-BAD : * [Another Awesome Book](http://example.com/book.pdf)(PDF)
-GOOD: * [Another Awesome Book](http://example.com/book.pdf) (PDF)
+```markdown
+* [Another Awesome Book - John Doe](http://example.com/book.html)
+* [Another Awesome Book](http://example.com/book.html)- John Doe
+* [Another Awesome Book](http://example.com/book.html) - John Doe
 ```
 
-- Author comes before format:
+Yields:
 
+```text
+1:3-1:66: Misplaced author: author should be after the link
+2:3-2:65: Missing a space before author
 ```
-BAD : * [Another Awesome Book](http://example.com/book.pdf)- John Doe
-GOOD: * [Another Awesome Book](http://example.com/book.pdf) - John Doe (PDF)
+
+###### Format
+
+If the URL in the link refers to a PDF, that format is mentioned.
+
+```markdown
+* [Another Awesome Book](http://example.com/book.pdf)(PDF)
+* [Another Awesome Book](http://example.com/book.pdf)
+* [Another Awesome Book](http://example.com/book.pdf) (PDF)
+```
+
+Yields:
+
+```text
+1:3-1:59: Missing a space before PDF indication
+2:3-2:54: Missing PDF indication
+```
+
+###### Author and Format
+
+The author comes before the format:
+
+```markdown
+* [Another Awesome Book](http://example.com/book.pdf)- John Doe
+* [Another Awesome Book](http://example.com/book.pdf) - John Doe
+* [Another Awesome Book](http://example.com/book.pdf) - John Doe (PDF)
+```
+
+Yields:
+
+```text
+1:3-1:64: Missing a space before author
+1:3-1:64: Missing PDF indication
+2:3-2:65: Missing PDF indication
 ```
 
 ## Using the rule
 
-### Via `.mdastrc`
+### Via `.remarkrc`
 
 ```bash
-npm install -g remark
-npm install -g remark-lint
-npm install remark-lint-books-links # local install!
+npm install -g remark-cli
+npm install remark-lint remark-lint-books-links
 ```
 
 Then, set up your `.mdastrc`:
 
 ```JSON
 {
-  "plugins": {
-    "remark-lint": {
-      "external": ["remark-lint-books-links"]
-    }
-  }
+  "plugins": [
+    "lint",
+    "lint-books-links"
+  ]
 }
 ```
 
 Now you can use the following command to run the lint:
 
 ```bash
-remark --no-stdout xxx.md
+remark xxx.md
 ```
 
 ### Via CLI
 
 ```bash
-npm install -g remark
-npm install -g remark-lint
-npm install -g remark-lint-books-links # global install!
-remark --no-stdout -u remark-lint="external:[\"remark-lint-books-links\"]" xxx.md
+npm install -g remark-cli
+npm install remark-lint remark-lint-books-links
+remark -u lint -u lint-books-links xxx.md
 ```
-
-Note that the `lint=<lint_options>` option only works with `remark >= 1.1.1`.
-
-This `README.md` is based on [this one](https://github.com/chcokr/mdast-lint-sentence-newline/blob/250b106c9e19b387270099cf16f17a84643f8944/README.md) by [@chcokr](https://github.com/chcokr) (MIT).
