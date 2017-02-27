@@ -1,69 +1,69 @@
 'use strict';
 
+var rule = require('unified-lint-rule');
+var generated = require('unist-util-generated');
 var visit = require('unist-util-visit');
-var position = require('mdast-util-position');
+var toString = require('mdast-util-to-string');
 
-function hasLink(item) {
-  return item.children.length && item.children[0].type === 'paragraph' && item.children[0].children.length && item.children[0].children[0].type === 'link';
-}
+var credit = /- ([^(\n]+){0,1}/m;
+var filetype = /\(PDF\)/;
 
-function itemLink(ast, file, preferred, done) {
-  var contents = file.toString();
-
-  visit(ast, 'list', function (node) {
+function itemLink(tree, file) {
+  visit(tree, 'list', function (node) {
     var items = node.children;
-    var author = undefined;
-    var pdf = undefined;
-    var restStart = undefined;
-    var restEnd = undefined;
-    var lineStart = undefined;
-    var lineEnd = undefined;
-    var line = undefined;
-    var rest = undefined;
 
     if (node.ordered) {
       return;
     }
 
     items.forEach(function (item) {
-      if (hasLink(item)) {
-        lineStart = item.children[0].children[0].position.start.offset;
-        lineEnd = item.children[0].children[item.children[0].children.length - 1].position.end.offset;
-        line = contents.slice(lineStart, lineEnd);
+      var head = item.children[0];
+      var link = head && head.type === 'paragraph' && head.children[0];
+      var line = void 0;
+      var rest = void 0;
+      var author = void 0;
+      var pdf = void 0;
+
+      if (generated(item)) {
+        return;
+      }
+
+      if (link && link.type === 'link') {
+        line = toString(link);
         rest = null;
 
-        if (item.children[0].children.length > 1) {
-          restStart = item.children[0].children[1].position.start.offset;
-          restEnd = item.children[0].children[item.children[0].children.length - 1].position.end.offset;
-          rest = contents.slice(restStart, restEnd);
+        if (head.children.length > 1) {
+          rest = toString({ children: head.children.slice(1) });
         }
 
-        if (position.generated(item)) {
-          return;
-        }
+        author = credit.exec(rest);
 
-        author = /- ([^\(\n]+){0,1}/gm.exec(rest);
         if (author) {
           if (author.index < 1) {
-            file.warn('Missing a space before author', item);
+            file.message('Missing a space before author', head);
           } else if (author.index !== 1 && author[1][author[1].length - 1] !== ')') {
-            file.warn('Misplaced author', item);
+            file.message('Misplaced author', head);
+          }
+        } else {
+          author = credit.exec(line);
+
+          if (author) {
+            file.message('Misplaced author: author should be after the link', link);
           }
         }
 
-        pdf = /(\.pdf)/gmi.exec(line);
-        if (pdf) {
-          if (!rest || pdf.length > 1 && !/PDF/gm.test(rest)) {
-            file.warn('Missing PDF indication', item);
+        if (/\.pdf($|\?)/.test(link.url)) {
+          pdf = filetype.exec(rest);
+
+          if (!pdf) {
+            file.message('Missing PDF indication', head);
+          } else if (pdf.index < 1) {
+            file.message('Missing a space before PDF indication', head);
           }
         }
       }
     });
   });
-
-  done();
 }
 
-module.exports = {
-  'books-links': itemLink
-};
+module.exports = rule('remark-lint:books-links', itemLink);
