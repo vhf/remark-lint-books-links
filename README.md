@@ -6,7 +6,8 @@ This rule only applies to list items starting with a link. It enforces the follo
 
 ###### Author
 
-If an author is mentioned, it's done with ` - ` (a dash surrounded by single spaces)
+If an author is mentioned, it's done with `・-・` (middots represent spaces, so,
+a dash surrounded by single spaces)
 
 ```markdown
 * [Another Awesome Book - John Doe](http://example.com/book.html)
