@@ -5,8 +5,7 @@ const booksLinks = require('./');
 
 const processor = remark().use(lint).use(booksLinks);
 
-const author = `* [Another Awesome Book - John Doe](http://example.com/book.html)
-* [Another Awesome Book](http://example.com/book.html)- John Doe
+const author = `* [Another Awesome Book](http://example.com/book.html)- John Doe
 * [Another Awesome Book](http://example.com/book.html) - John Doe
 `;
 
@@ -24,8 +23,7 @@ test('remark-lint-alphabetize-lists', (t) => {
   t.deepEqual(
     processor.processSync(author).messages.map(String),
     [
-      '1:3-1:66: Misplaced author: author should be after the link',
-      '2:3-2:65: Missing a space before author'
+      '1:3-1:65: Missing a space before author'
     ],
     'author'
   );

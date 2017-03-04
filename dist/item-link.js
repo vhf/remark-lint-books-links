@@ -19,7 +19,6 @@ function itemLink(tree, file) {
     items.forEach(function (item) {
       var head = item.children[0];
       var link = head && head.type === 'paragraph' && head.children[0];
-      var line = void 0;
       var rest = void 0;
       var author = void 0;
       var pdf = void 0;
@@ -29,7 +28,6 @@ function itemLink(tree, file) {
       }
 
       if (link && link.type === 'link') {
-        line = toString(link);
         rest = null;
 
         if (head.children.length > 1) {
@@ -43,12 +41,6 @@ function itemLink(tree, file) {
             file.message('Missing a space before author', head);
           } else if (author.index !== 1 && author[1][author[1].length - 1] !== ')') {
             file.message('Misplaced author', head);
-          }
-        } else {
-          author = credit.exec(line);
-
-          if (author) {
-            file.message('Misplaced author: author should be after the link', link);
           }
         }
 

@@ -18,8 +18,7 @@ a dash surrounded by single spaces)
 Yields:
 
 ```text
-1:3-1:66: Misplaced author: author should be after the link
-2:3-2:65: Missing a space before author
+1:3-1:65: Missing a space before author
 ```
 
 ###### Format
